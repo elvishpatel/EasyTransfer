@@ -48,10 +48,25 @@ Most free file transfer tools have limitations — either in storage, speed, or 
 
 ---
 
-## 📦 Setup Instructions
+## 🧠 Future Improvements
+🔒 Add password protection per file
+📊 Analytics for download counts
+🎯 File preview before downloading
+📅 Auto delete after expiry
+🌈 Theming and dark mode toggle
+💬 Real-time file progress indicators
 
-### 1. Clone the Repo
+---
 
-```bash
-git clone https://github.com/elvish-patel/EasyTransfer.git
-cd EasyTransfer
+## 🙌 Contributors
+Elvish Patel – GitHub
+
+---
+
+## 📄 License
+This project is licensed under the MIT License — feel free to use and modify.
+
+---
+
+## 💡 Fun Fact
+EasyTransfer was built with the vision of making file sharing effortless and storage-free by smartly utilizing Google Drive’s free 15 GB quota — no server cost, no bandwidth limits!
