@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Easy Transfer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px 20px;
+      width: 95%;
+      max-width: 500px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      animation: fadeIn 1s ease-in;
+    }
+
+    h2 {
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .custom-file {
+      border: 2px dashed #00ffe5;
+      border-radius: 12px;
+      padding: 25px 15px;
+      margin: 15px 0;
+      color: #ccc;
+      cursor: pointer;
+      word-wrap: break-word;
+      font-size: 14px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    button {
+      padding: 12px 25px;
+      margin: 10px 5px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #00ffd0;
+      color: #000;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #00c4a8;
+      transform: scale(1.05);
+    }
+
+    .info {
+      font-size: 14px;
+      margin: 5px 0;
+      color: #ccc;
+      word-wrap: break-word;
+    }
+
+    progress {
+      width: 100%;
+      height: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    progress::-webkit-progress-bar {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    progress::-webkit-progress-value {
+      background: #00ffd0;
+      border-radius: 10px;
+    }
+
+    #downloadSection {
+      display: none;
+      margin-top: 15px;
+    }
+
+    #downloadLinkInput {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      background: rgba(0, 255, 208, 0.1);
+      border: 1px solid #00ffd0;
+      color: #00ffd0;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .warning-text {
+      font-size: 13px;
+      color: #ffdddd;
+      margin-top: 8px;
+      background: rgba(255, 0, 0, 0.1);
+      border-left: 4px solid #ff5e5e;
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    .spinner {
+      display: none;
+      margin: 15px auto;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top: 4px solid #00ffd0;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Easy Transfer</h2>
+
+    <div class="custom-file" id="dropZone">
+      <span id="fileLabel">📁 Drag & drop or tap to select a file</span>
+    </div>
+    <input type="file" id="fileInput" />
+
+    <div class="info" id="fileInfo"></div><br>
+
+    <button id="createRoomBtn">Upload File</button>
+
+    <div class="spinner" id="spinner"></div>
+
+    <progress id="progressBar" value="0" max="100"></progress>
+    <div class="info" id="status">Status: Waiting...</div>
+
+    <div class="warning-text">
+        ⚠️ File size limit: 1 GB<br>
+        🕒 Auto-deletes after 24 hours<br>
+        ⚠️ This project is for informational purposes only.
+      </div>
+
+    <!-- Hidden section: shows after upload -->
+    <div id="downloadSection">
+      <input type="text" id="downloadLinkInput" readonly placeholder="Download link will appear here" />
+      <button onclick="copyLink()">📋 Copy Link</button>
+    </div>
+  </div>
+
+  <script>
+    let file = null;
+
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileLabel = document.getElementById('fileLabel');
+    const statusText = document.getElementById('status');
+    const progressBar = document.getElementById('progressBar');
+    const spinner = document.getElementById('spinner');
+    const downloadSection = document.getElementById('downloadSection');
+
+    dropZone.onclick = () => fileInput.click();
+    fileInput.onchange = () => {
+      file = fileInput.files[0];
+      if (file) {
+        fileInfo.textContent = `📦 ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        fileLabel.textContent = `✅ File Ready: ${file.name}`;
+      }
+    };
+
+    document.getElementById('createRoomBtn').onclick = async () => {
+      if (!file) return alert("Select a file first");
+
+      spinner.style.display = 'block';
+      progressBar.value = 10;
+      statusText.textContent = "Uploading...";
+      downloadSection.style.display = 'none';
+
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64Data = reader.result.split(',')[1];
+        const formData = new URLSearchParams();
+        formData.append("file", base64Data);
+        formData.append("fileName", file.name);
+        formData.append("mimeType", file.type);
+
+        try {
+          const res = await fetch("https://script.google.com/macros/s/AKfycbxd1xZ_LMKuEPTNCEpGmepcGfSVhd74UPepn91PXKL4-LUSGik--SC9ct4MdugsvMvM/exec", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
+          });
+
+          const result = await res.json();
+          const downloadLink = result.url;
+          statusText.textContent = `✅ File Uploaded Successfully!`;
+          document.getElementById("downloadLinkInput").value = downloadLink;
+          progressBar.value = 100;
+          spinner.style.display = 'none';
+          downloadSection.style.display = 'block';
+        } catch (err) {
+          alert("Upload failed: " + err.message);
+          statusText.textContent = "❌ Upload failed";
+          spinner.style.display = 'none';
+        }
+      };
+      reader.readAsDataURL(file);
+    };
+
+    function copyLink() {
+      const input = document.getElementById("downloadLinkInput");
+      input.select();
+      input.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(input.value).then(() => {
+        alert("✅ Link copied to clipboard!");
+      }).catch(() => {
+        alert("❌ Failed to copy link.");
+      });
+    }
+  </script>
+</body>
+
+</html>
