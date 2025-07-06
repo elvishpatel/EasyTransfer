@@ -30,7 +30,7 @@ Most free file transfer tools have limitations — either in storage, speed, or 
 
 | Frontend           | Backend Cloud & APIs   |
 |--------------------|------------------------|
-| HTML, CSS, JavaScript | | Google Drive API  |
+| HTML, CSS, JavaScript | Google Drive API  |
 
 ---
 
