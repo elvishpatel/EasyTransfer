@@ -21,7 +21,7 @@ Most free file transfer tools have limitations — either in storage, speed, or 
 - 🌐 Transfer files across devices within the same Wi-Fi or across the internet
 - 📥 Easy downloads without signup (for recipients)
 - 🔐 Secure file handling with private link-based access
-- ☁️ **Utilizes your Google Drive’s free storage space** as a backend
+- ☁️ **Utilizes our Google Drive’s free storage space** as a backend
 - 📱 Mobile-friendly design with drag-and-drop support
 
 ---
@@ -45,16 +45,6 @@ Most free file transfer tools have limitations — either in storage, speed, or 
 4. **Recipients can download**
    - Users can download the file using the link — without login (as per config).
 
-
----
-
-## 🧠 Future Improvements
-🔒 Add password protection per file
-📊 Analytics for download counts
-🎯 File preview before downloading
-📅 Auto delete after expiry
-🌈 Theming and dark mode toggle
-💬 Real-time file progress indicators
 
 ---
 
